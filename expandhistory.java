@@ -50,8 +50,9 @@ public class expandhistory extends JFrame {
      * Create the frame.
      */
 
-    public expandhistory() {
+    public expandhistory(String ID) {
 
+        
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/foldingpaperstory", "root", "");
 
@@ -133,10 +134,11 @@ public class expandhistory extends JFrame {
                     String sent2 = s2.getText();
                 
                   //Todo: abspeichern der Sätze              
-
+                    Package login;
                
 
                     String query = "INSERT INTO tbl_story (sentence1,sentence2) values('" + sent1 + "','" + sent2 +  "')";
+                    
 
                     Statement sta = connection.createStatement();
                     int x = sta.executeUpdate(query);

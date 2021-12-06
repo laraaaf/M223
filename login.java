@@ -109,12 +109,16 @@ public class login extends JFrame {
 
                     
 
-                    String query = "SELECT Mail FROM tbl_user WHERE Password = '" + password.hashCode() + "' AND Mail = '" + email.getText() + "'  ";
+                    String query = "SELECT ID_User FROM tbl_user WHERE Password = '" + password.hashCode() + "' AND Mail = '" + email.getText() + "'  ";
 
+                    
                     System.out.println("connected!!!!!! --");
 
                     Statement sta = connection.createStatement();
                     ResultSet x = sta.executeQuery(query);
+                  
+                    String id = x.getString(x.findColumn("ID_User"));
+
                     if (x.next() == false) {
                         JOptionPane.showMessageDialog(anmeldenButton, "Passwort oder E-Mail Adresse Falsch");
                     } else {
