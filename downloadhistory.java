@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.swing.JButton;
@@ -15,6 +16,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import java.io.FileWriter;   
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * User Registration using Swing
@@ -74,17 +78,39 @@ public class downloadhistory extends JFrame {
                 //Todo: herunterladen geschichte in txt              
 
                 try {
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/127.0.0.1/foldingpaperstory", "root", "");
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/foldingpaperstory", "root", "");
 
-                    String query = "SELECT Mail FROM tbl_user WHERE Password ='";
+                    String query = "SELECT sentence1, sentence2 FROM tbl_story";
 
                     Statement sta = connection.createStatement();
-                    int x = sta.executeUpdate(query);
-                    if (x == 0) {
-                        JOptionPane.showMessageDialog(downloadButton, "Passwort oder E-Mail Adresse Falsch");
+                    ResultSet x = sta.executeQuery(query);
+
+                    if (x.next() == false) {
+                        JOptionPane.showMessageDialog(downloadButton, "Die Geschichte hat noch keine Inhalt. Es wurden keine Sätze gefunden");
                     } else {
-                        JOptionPane.showMessageDialog(downloadButton,
-                            "Hallo,Erfolgreich angemeldet");
+
+                        //create output file
+                        try {
+                            String home = System.getProperty("user.home");
+                            FileWriter myWriter = new FileWriter(home + "/Downloads/Geschichte.txt", Charset.forName("UTF8"));
+                                                    
+                                                           
+                            myWriter.write(x.getString("sentence1") + " ");
+                            myWriter.write(x.getString("sentence2") + "\n");
+
+                            while (x.next()){
+                                                           
+                                    myWriter.write(x.getString("sentence1") + " ");
+                                    myWriter.write(x.getString("sentence2") + "\n");
+                                
+                            }
+                            myWriter.close();
+                            JOptionPane.showMessageDialog(downloadButton, "Die Geschichte wurde heruntergeladen");
+                         
+                          } catch (IOException exception) {
+                            System.out.println("An error occurred.");
+                            exception.printStackTrace();
+                          }
                     }
                     connection.close();
                 } catch (Exception exception) {
@@ -102,13 +128,10 @@ public class downloadhistory extends JFrame {
              public void actionPerformed(ActionEvent e) {
              
  
-                 try {
-                     time frame = new time();
-                     frame.setVisible(true);
-                   
-                 } catch (Exception exception) {
-                     exception.printStackTrace();
-                 }
+                time frame = new time();
+                frame.setVisible(true);
+                dispose();
+
              }
          });
          weiterButton.setFont(new Font("Tahoma", Font.PLAIN, 20));

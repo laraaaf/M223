@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.swing.JButton;
@@ -93,27 +94,35 @@ public class login extends JFrame {
         anmeldenButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
      
-                  expandhistory frame = new expandhistory();
-                  frame.setVisible(true);
+                
 
                 String password = passwordField.getText();
+                
+            
 
                 String msg = "" + email;
                 msg += " \n";
                
 
                 try {
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/127.0.0.1/foldingpaperstory", "root", "");
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/foldingpaperstory", "root", "");
 
-                    String query = "SELECT Mail FROM tbl_user WHERE Password = '" + password + "'";
+                    
+
+                    String query = "SELECT Mail FROM tbl_user WHERE Password = '" + password.hashCode() + "' AND Mail = '" + email.getText() + "'  ";
+
+                    System.out.println("connected!!!!!! --");
 
                     Statement sta = connection.createStatement();
-                    int x = sta.executeUpdate(query);
-                    if (x == 0) {
+                    ResultSet x = sta.executeQuery(query);
+                    if (x.next() == false) {
                         JOptionPane.showMessageDialog(anmeldenButton, "Passwort oder E-Mail Adresse Falsch");
                     } else {
-                        JOptionPane.showMessageDialog(anmeldenButton,
-                            "Hallo, " + msg + "Erfolgreich angemeldet");
+                        
+                            expandhistory frame = new expandhistory();
+                            frame.setVisible(true);
+                            dispose();
+                            
                     }
                     connection.close();
                 } catch (Exception exception) {

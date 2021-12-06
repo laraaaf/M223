@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.swing.JButton;
@@ -92,36 +93,56 @@ public class register extends JFrame {
         registrierButton = new JButton("Registrieren");
         registrierButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                
-                expandhistory frame = new expandhistory();
-                  frame.setVisible(true);
 
-     
+              
+                
                 String emailId = email.getText();
                 String password = passwordField.getText();
-
-                String msg = "" + email;
-                msg += " \n";
+                int hashpassword = password.hashCode();
                
-
                 try {
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:127001/foldingpaperstory", "root", "");
 
-                    String query = "INSERT INTO tbl_user (Password,Mail) values('" + password + "','" + emailId +  "')";
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/foldingpaperstory", "root", "");
+
+                 //Check if E-Mail input is valid
+
+                    //pattern
+                    final String EMAIL_PATTERN = 
+                    "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+                    //check if Mail is already used
+                    String query = "SELECT Mail FROM tbl_user WHERE Mail = '" + email.getText() + "'  ";
 
                     Statement sta = connection.createStatement();
+                    ResultSet res = sta.executeQuery(query);
+
+    
+                    if (!emailId.matches(EMAIL_PATTERN) || res.next() == true) {
+                        JOptionPane.showMessageDialog(registrierButton, "E-Mail Adresse wird entweder bereits gebraucht oder entspricht nicht den vorgaben");
+                    }else{
+
+                   
+                    query = "INSERT INTO tbl_user (Password,Mail) values('" + hashpassword + "','" + emailId +  "')";
+
+                    sta = connection.createStatement();
                     int x = sta.executeUpdate(query);
                     if (x == 0) {
                         JOptionPane.showMessageDialog(registrierButton, "This is alredy exist");
                     } else {
-                        JOptionPane.showMessageDialog(registrierButton,
-                            "Welcome, " + msg + "Your account is sucessfully created");
+                        
+                            expandhistory frame = new expandhistory();
+                            frame.setVisible(true);
+                            dispose();
                     }
                     connection.close();
+                    }
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
             }
+
+            
         });
         registrierButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
         registrierButton.setBounds(320, 600, 150, 30);

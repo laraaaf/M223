@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.swing.JButton;
@@ -50,84 +51,111 @@ public class expandhistory extends JFrame {
      */
 
     public expandhistory() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(250, 190, 800, 700);
-        setResizable(false);
-        contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        setContentPane(contentPane);
-        contentPane.setLayout(null);
 
-        //Todo: abfrage vorheriger Satz
-        JLabel lblsmattittle = new JLabel("Vorheriger Satz");
-        lblsmattittle.setFont(new Font("Times New Roman", Font.PLAIN, 30));
-        lblsmattittle.setBounds(350, 52, 400, 50);
-        contentPane.add(lblsmattittle);
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/foldingpaperstory", "root", "");
 
-        JLabel lbltitle = new JLabel("Schreibe weiter...");
-        lbltitle.setFont(new Font("Times New Roman", Font.PLAIN, 42));
-        lbltitle.setBounds(350, 152, 400, 50);
-        contentPane.add(lbltitle);
 
-        //email
-        JLabel s1label = new JLabel("Satz 1");
-        s1label.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        s1label.setBounds(242, 243, 160, 50);
-        contentPane.add(s1label);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setBounds(250, 190, 800, 700);
+            setResizable(false);
+            contentPane = new JPanel();
+            contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+            setContentPane(contentPane);
+            contentPane.setLayout(null);
 
-        s1 = new JTextField();
-        s1.setFont(new Font("Tahoma", Font.PLAIN, 32));
-        s1.setBounds(414, 235, 228, 50);
-        s1.setColumns(10);
-        contentPane.add(s1);
-      
+            //abfrage vorheriger Satz
+            String query = "SELECT sentence2 FROM `tbl_story` ORDER BY ID_StoryLine DESC";
 
-        //passwort
-        JLabel s2label = new JLabel("Satz 2");
-        s2label.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        s2label.setBounds(242, 324, 124, 36);
-        contentPane.add(s2label);
+            Statement sta = connection.createStatement();
+            ResultSet x = sta.executeQuery(query);
 
-        s2 = new JTextField();
-        s2.setFont(new Font("Tahoma", Font.PLAIN, 32));
-        s2.setBounds(414, 320, 228, 50);
-        s2.setColumns(10);
-        contentPane.add(s2);
+            if (x.next() == false) {
+                JLabel lblsmattittle = new JLabel("Schreibe die ersätzen Sätze der Geschichte...");
+                lblsmattittle.setFont(new Font("Times New Roman", Font.PLAIN, 30));
+                lblsmattittle.setBounds(350, 52, 400, 50);
+                contentPane.add(lblsmattittle);
+            } else {
+                
+                String s2 = x.getString(x.findColumn("sentence2"));
+                JLabel lblsmattittle = new JLabel(s2);
+                lblsmattittle.setFont(new Font("Times New Roman", Font.PLAIN, 30));
+                lblsmattittle.setBounds(350, 52, 400, 50);
+                contentPane.add(lblsmattittle);
+                    
+            }
 
-        //anmelden-button
-        sendenButton = new JButton("senden");
-        sendenButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-     
+            JLabel lbltitle = new JLabel("Schreibe weiter...");
+            lbltitle.setFont(new Font("Times New Roman", Font.PLAIN, 42));
+            lbltitle.setBounds(350, 152, 400, 50);
+            contentPane.add(lbltitle);
+
+            //s1
+            JLabel s1label = new JLabel("Satz 1");
+            s1label.setFont(new Font("Tahoma", Font.PLAIN, 20));
+            s1label.setBounds(242, 243, 160, 50);
+            contentPane.add(s1label);
+
+            s1 = new JTextField();
+            s1.setFont(new Font("Tahoma", Font.PLAIN, 32));
+            s1.setBounds(414, 235, 228, 50);
+            s1.setColumns(10);
+            contentPane.add(s1);
+        
+
+            //s2
+            JLabel s2label = new JLabel("Satz 2");
+            s2label.setFont(new Font("Tahoma", Font.PLAIN, 20));
+            s2label.setBounds(242, 324, 124, 36);
+            contentPane.add(s2label);
+
+            s2 = new JTextField();
+            s2.setFont(new Font("Tahoma", Font.PLAIN, 32));
+            s2.setBounds(414, 320, 228, 50);
+            s2.setColumns(10);
+            contentPane.add(s2);
+
+            //anmelden-button
+            sendenButton = new JButton("senden");
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            }
+
+            sendenButton.addActionListener(new ActionListener() {
+              public void actionPerformed(ActionEvent e) {
+
+
 
                 try {
-                    downloadhistory frame = new downloadhistory();
-                    frame.setVisible(true);
-                  
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-                //Todo: abspeichern der Sätze              
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/foldingpaperstory", "root", "");
+                
+                    String sent1 = s1.getText();
+                    String sent2 = s2.getText();
+                
+                  //Todo: abspeichern der Sätze              
 
-                try {
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/127.0.0.1/foldingpaperstory", "root", "");
+               
 
-                    String query = "SELECT Mail FROM tbl_user WHERE Password ='";
+                    String query = "INSERT INTO tbl_story (sentence1,sentence2) values('" + sent1 + "','" + sent2 +  "')";
 
                     Statement sta = connection.createStatement();
                     int x = sta.executeUpdate(query);
                     if (x == 0) {
-                        JOptionPane.showMessageDialog(sendenButton, "Passwort oder E-Mail Adresse Falsch");
+                        JOptionPane.showMessageDialog(sendenButton, "konnte Geschichte nicht erweitern, verusche es erneut.");
                     } else {
-                        JOptionPane.showMessageDialog(sendenButton,
-                            "Hallo,Erfolgreich angemeldet");
+                        downloadhistory frame = new downloadhistory();
+                        frame.setVisible(true);
+                        dispose();
                     }
                     connection.close();
                 } catch (Exception exception) {
                     exception.printStackTrace();
-                }
+                    }
+                
             }
         });
+ 
+
         sendenButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
         sendenButton.setBounds(320, 600, 150, 30);
         contentPane.add(sendenButton);
@@ -139,7 +167,7 @@ public class expandhistory extends JFrame {
             
 
                 try {
-                    register frame = new register();
+                    login frame = new login();
                     frame.setVisible(true);
                   
                 } catch (Exception exception) {
