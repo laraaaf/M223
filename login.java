@@ -26,7 +26,8 @@ public class login extends JFrame {
     private JPanel contentPane;
     private JTextField email;
     private JPasswordField passwordField;
-    private JButton btnNewButton;
+    private JButton anmeldenButton;
+    private JButton regButton;
 
     /**
      * Launch the application.
@@ -50,7 +51,7 @@ public class login extends JFrame {
 
     public login() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(450, 190, 1014, 597);
+        setBounds(250, 190, 800, 700);
         setResizable(false);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -59,13 +60,13 @@ public class login extends JFrame {
 
         JLabel lblNewUserRegister = new JLabel("Login");
         lblNewUserRegister.setFont(new Font("Times New Roman", Font.PLAIN, 42));
-        lblNewUserRegister.setBounds(362, 52, 325, 50);
+        lblNewUserRegister.setBounds(350, 52, 400, 50);
         contentPane.add(lblNewUserRegister);
 
         //email
         JLabel lblNewLabel = new JLabel("E-Mail Adresse");
         lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        lblNewLabel.setBounds(242, 243, 110, 50);
+        lblNewLabel.setBounds(242, 243, 160, 50);
         contentPane.add(lblNewLabel);
 
         email = new JTextField();
@@ -87,11 +88,13 @@ public class login extends JFrame {
         passwordField.setColumns(10);
         contentPane.add(passwordField);
 
-        //reg-button
-        btnNewButton = new JButton("Anmelden");
-        btnNewButton.addActionListener(new ActionListener() {
+        //anmelden-button
+        anmeldenButton = new JButton("Anmelden");
+        anmeldenButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
      
+                  expandhistory frame = new expandhistory();
+                  frame.setVisible(true);
 
                 String password = passwordField.getText();
 
@@ -100,16 +103,16 @@ public class login extends JFrame {
                
 
                 try {
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/foldingpaperstory", "root", "");
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/127.0.0.1/foldingpaperstory", "root", "");
 
                     String query = "SELECT Mail FROM tbl_user WHERE Password = '" + password + "'";
 
                     Statement sta = connection.createStatement();
                     int x = sta.executeUpdate(query);
                     if (x == 0) {
-                        JOptionPane.showMessageDialog(btnNewButton, "Passwort oder E-Mail Adresse Falsch");
+                        JOptionPane.showMessageDialog(anmeldenButton, "Passwort oder E-Mail Adresse Falsch");
                     } else {
-                        JOptionPane.showMessageDialog(btnNewButton,
+                        JOptionPane.showMessageDialog(anmeldenButton,
                             "Hallo, " + msg + "Erfolgreich angemeldet");
                     }
                     connection.close();
@@ -118,8 +121,28 @@ public class login extends JFrame {
                 }
             }
         });
-        btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
-        btnNewButton.setBounds(399, 447, 259, 74);
-        contentPane.add(btnNewButton);
+        anmeldenButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
+        anmeldenButton.setBounds(320, 600, 150, 30);
+        contentPane.add(anmeldenButton);
+
+        //reg-Button
+        regButton = new JButton("Registrieren");
+        regButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            
+
+                try {
+                    register frame = new register();
+                    frame.setVisible(true);
+                  
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
+        });
+        regButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        regButton.setBounds(600, 10, 150, 30);
+        contentPane.add(regButton);
+
     }
 }

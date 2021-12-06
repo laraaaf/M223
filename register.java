@@ -26,7 +26,8 @@ public class register extends JFrame {
     private JPanel contentPane;
     private JTextField email;
     private JPasswordField passwordField;
-    private JButton btnNewButton;
+    private JButton registrierButton;
+    private JButton anButton;
 
     /**
      * Launch the application.
@@ -50,7 +51,7 @@ public class register extends JFrame {
 
     public register() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(450, 190, 1014, 597);
+        setBounds(250, 190, 800, 700);
         setResizable(false);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -59,13 +60,13 @@ public class register extends JFrame {
 
         JLabel lblNewUserRegister = new JLabel("Registrierung");
         lblNewUserRegister.setFont(new Font("Times New Roman", Font.PLAIN, 42));
-        lblNewUserRegister.setBounds(362, 52, 325, 50);
+        lblNewUserRegister.setBounds(300, 52, 400, 50);
         contentPane.add(lblNewUserRegister);
 
         //email
         JLabel lblNewLabel = new JLabel("E-Mail Adresse");
         lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        lblNewLabel.setBounds(242, 243, 110, 50);
+        lblNewLabel.setBounds(242, 243, 160, 50);
         contentPane.add(lblNewLabel);
 
         email = new JTextField();
@@ -88,9 +89,13 @@ public class register extends JFrame {
         contentPane.add(passwordField);
 
         //reg-button
-        btnNewButton = new JButton("Registrieren");
-        btnNewButton.addActionListener(new ActionListener() {
+        registrierButton = new JButton("Registrieren");
+        registrierButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                
+                expandhistory frame = new expandhistory();
+                  frame.setVisible(true);
+
      
                 String emailId = email.getText();
                 String password = passwordField.getText();
@@ -107,9 +112,9 @@ public class register extends JFrame {
                     Statement sta = connection.createStatement();
                     int x = sta.executeUpdate(query);
                     if (x == 0) {
-                        JOptionPane.showMessageDialog(btnNewButton, "This is alredy exist");
+                        JOptionPane.showMessageDialog(registrierButton, "This is alredy exist");
                     } else {
-                        JOptionPane.showMessageDialog(btnNewButton,
+                        JOptionPane.showMessageDialog(registrierButton,
                             "Welcome, " + msg + "Your account is sucessfully created");
                     }
                     connection.close();
@@ -118,8 +123,28 @@ public class register extends JFrame {
                 }
             }
         });
-        btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
-        btnNewButton.setBounds(399, 447, 259, 74);
-        contentPane.add(btnNewButton);
+        registrierButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
+        registrierButton.setBounds(320, 600, 150, 30);
+        contentPane.add(registrierButton);
+
+        //an-Button
+        anButton = new JButton("Anmelden");
+        anButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            
+
+                try {
+                    login frame = new login();
+                    frame.setVisible(true);
+                  
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
+        });
+        anButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        anButton.setBounds(600, 10, 150, 30);
+        contentPane.add(anButton);
+
     }
 }
