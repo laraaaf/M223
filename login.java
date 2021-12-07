@@ -117,31 +117,23 @@ public class login extends JFrame {
                     Statement sta = connection.createStatement();
                     ResultSet x = sta.executeQuery(query);
                    
-
-                    
-                    
-                    
-
-
                     if (x.next() == false) {
                         JOptionPane.showMessageDialog(anmeldenButton, "Passwort oder E-Mail Adresse Falsch");
                     } else {
                         String id = x.getString(x.findColumn("ID_User"));
+
                         //check if last expand was 2 hours ago
                         query = "SELECT timestamp FROM tbl_userstory WHERE FK_User = '" + id + "' ORDER BY ID_StoryLine DESC";
                         sta = connection.createStatement();
                         ResultSet l = sta.executeQuery(query);
                         if (l.next() == true){
                         
-                        
                         LocalDateTime startTime = LocalDateTime.parse(l.getString(l.findColumn("timestamp")),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                        
-                        
-                             
+                         
                         LocalDateTime now = LocalDateTime.now();           
                         long difference = ChronoUnit.HOURS.between(startTime, now);
                         
-                        System.out.println(difference);
+                        
                         if (difference>= 2){
                         
                             expandhistory frame = new expandhistory(id);
