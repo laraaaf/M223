@@ -127,13 +127,27 @@ public class register extends JFrame {
 
                     sta = connection.createStatement();
                     int x = sta.executeUpdate(query);
+
+                    
+                   
+
                     if (x == 0) {
                         JOptionPane.showMessageDialog(registrierButton, "This is alredy exist");
                     } else {
+
                         
-                            expandhistory frame = new expandhistory();
-                            frame.setVisible(true);
-                            dispose();
+
+                        //get id from user
+                        query = "SELECT ID_User FROM tbl_user WHERE Password = '" + hashpassword + "' AND Mail = '" + emailId + "'  ";
+                        sta = connection.createStatement();
+                        ResultSet ids = sta.executeQuery(query);
+                        ids.next();
+                        String id = ids.getString(ids.findColumn("ID_User"));
+                    
+                        
+                        expandhistory frame = new expandhistory(id);
+                        frame.setVisible(true);
+                        dispose();
                     }
                     connection.close();
                     }

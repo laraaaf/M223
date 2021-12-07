@@ -7,6 +7,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -108,24 +112,45 @@ public class login extends JFrame {
                     Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/foldingpaperstory", "root", "");
 
                     
-
+                    //get id from user
                     String query = "SELECT ID_User FROM tbl_user WHERE Password = '" + password.hashCode() + "' AND Mail = '" + email.getText() + "'  ";
-
-                    
-                    System.out.println("connected!!!!!! --");
-
                     Statement sta = connection.createStatement();
                     ResultSet x = sta.executeQuery(query);
-                  
-                    String id = x.getString(x.findColumn("ID_User"));
+                   
+
+                    
+                    
+                    
+
 
                     if (x.next() == false) {
                         JOptionPane.showMessageDialog(anmeldenButton, "Passwort oder E-Mail Adresse Falsch");
                     } else {
+                        String id = x.getString(x.findColumn("ID_User"));
+                        //check if last expand was 2 hours ago
+                         query = "SELECT timestamp FROM tbl_userstory WHERE FK_User = '" + id + "' ORDER BY ID_StoryLine DESC";
+                        sta = connection.createStatement();
+                        ResultSet l = sta.executeQuery(query);
+                        l.next();
                         
-                            expandhistory frame = new expandhistory();
+                        LocalDateTime startTime = LocalDateTime.parse(l.getString(l.findColumn("timestamp")),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                        
+                        
+                             
+                        LocalDateTime now = LocalDateTime.now();           
+                        long difference = ChronoUnit.HOURS.between(startTime, now);
+                        
+                        System.out.println(difference);
+                        if (difference>= 2){
+                        
+                            expandhistory frame = new expandhistory(id);
                             frame.setVisible(true);
                             dispose();
+                        }else{
+                            time frame = new time(difference);
+                            frame.setVisible(true);
+                            dispose();
+                        }
                             
                     }
                     connection.close();

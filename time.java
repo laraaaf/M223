@@ -34,7 +34,7 @@ public class time extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    time frame = new time();
+                    time frame = new time(0);
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -47,7 +47,7 @@ public class time extends JFrame {
      * Create the frame.
      */
 
-    public time() {
+    public time(long Diff) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(250, 190, 800, 700);
         setResizable(false);
@@ -56,57 +56,20 @@ public class time extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        //TODO: abfrage der Zeit
-        JLabel lbltitle = new JLabel("Schreibe in x weiter");
+        //abfrage der Zeit
+        JLabel lbltitle = new JLabel("Schreibe in " + Diff + " h weiter");
         lbltitle.setFont(new Font("Times New Roman", Font.PLAIN, 32));
         lbltitle.setBounds(200, 52, 400, 400);
         contentPane.add(lbltitle);
 
 
-        //download-button
-        downloadButton = new JButton("Geschichte downloaden");
-        downloadButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-     
-
-                //Todo: abspeichern der Sätze              
-
-                try {
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/127.0.0.1/foldingpaperstory", "root", "");
-
-                    String query = "SELECT Mail FROM tbl_user WHERE Password ='";
-
-                    Statement sta = connection.createStatement();
-                    int x = sta.executeUpdate(query);
-                    if (x == 0) {
-                        JOptionPane.showMessageDialog(downloadButton, "Passwort oder E-Mail Adresse Falsch");
-                    } else {
-                        JOptionPane.showMessageDialog(downloadButton,
-                            "Hallo,Erfolgreich angemeldet");
-                    }
-                    connection.close();
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            }
-        });
-        downloadButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
-        downloadButton.setBounds(260, 450, 280, 30);
-        contentPane.add(downloadButton);
-
          //weiter-Button
-         weiterButton = new JButton("weiter");
+         weiterButton = new JButton("fertig");
          weiterButton.addActionListener(new ActionListener() {
              public void actionPerformed(ActionEvent e) {
              
  
-                 try {
-                     time frame = new time();
-                     frame.setVisible(true);
-                   
-                 } catch (Exception exception) {
-                     exception.printStackTrace();
-                 }
+                 dispose();
              }
          });
          weiterButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -122,6 +85,7 @@ public class time extends JFrame {
                 try {
                     register frame = new register();
                     frame.setVisible(true);
+                    dispose();
                   
                 } catch (Exception exception) {
                     exception.printStackTrace();

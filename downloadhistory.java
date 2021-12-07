@@ -128,7 +128,7 @@ public class downloadhistory extends JFrame {
              public void actionPerformed(ActionEvent e) {
              
  
-                time frame = new time();
+                time frame = new time(2);
                 frame.setVisible(true);
                 dispose();
 

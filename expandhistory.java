@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -7,6 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.Timer;
 
 /**
  * User Registration using Swing
@@ -37,7 +40,7 @@ public class expandhistory extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    expandhistory frame = new expandhistory();
+                    expandhistory frame = new expandhistory("1");
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -49,11 +52,13 @@ public class expandhistory extends JFrame {
     /**
      * Create the frame.
      */
-
+    
     public expandhistory(String ID) {
+     
+         
 
-        
-        try {
+         String id = ID;
+         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/foldingpaperstory", "root", "");
 
 
@@ -88,7 +93,7 @@ public class expandhistory extends JFrame {
 
             JLabel lbltitle = new JLabel("Schreibe weiter...");
             lbltitle.setFont(new Font("Times New Roman", Font.PLAIN, 42));
-            lbltitle.setBounds(350, 152, 400, 50);
+            lbltitle.setBounds(300, 152, 400, 50);
             contentPane.add(lbltitle);
 
             //s1
@@ -116,9 +121,33 @@ public class expandhistory extends JFrame {
             s2.setColumns(10);
             contentPane.add(s2);
 
+           
+            //counter
+            JLabel counter = new JLabel("Du hast nur 2 min!!");
+            counter.setFont(new Font("Tahoma", Font.PLAIN, 20));
+            counter.setForeground(Color.RED);
+            counter.setBounds(300, 400, 400, 50);
+            contentPane.add(counter);
+            Timer timer = new Timer(2*60*1000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent arg0) {
+                    dispose();
+                }
+              });
+    
+              timer.setRepeats(false); // Only execute once
+              timer.start();
+              
+              System.out.println(timer.getDelay()/1000/60 + "min");
+                    
+                
+              
+              
+            
+
             //anmelden-button
             sendenButton = new JButton("senden");
-        } catch (Exception exception) {
+         } catch (Exception exception) {
             exception.printStackTrace();
             }
 
@@ -128,18 +157,14 @@ public class expandhistory extends JFrame {
 
 
                 try {
-                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/foldingpaperstory", "root", "");
+                    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/foldingpaperstory?allowMultiQueries=true", "root", "");
                 
                     String sent1 = s1.getText();
                     String sent2 = s2.getText();
-                
-                  //Todo: abspeichern der Sätze              
-                    Package login;
-               
-
-                    String query = "INSERT INTO tbl_story (sentence1,sentence2) values('" + sent1 + "','" + sent2 +  "')";
                     
-
+                    //Todo: abspeichern der Sätze  INSERT INTO tbl_story (sentence1,sentence2) values('" + sent1 + "','" + sent2 +  "');            
+                    String query = "INSERT INTO tbl_story (sentence1,sentence2) values('" + sent1 + "','" + sent2 +  "');INSERT INTO `tbl_userstory` (`ID_StoryLine`, `timestamp`, `FK_User`, `FK_StoryLine`) VALUES (NULL, NOW(),'" + id + "', (SELECT ID_StoryLine FROM `tbl_story` WHERE sentence1 = '" + sent1 + "' AND sentence2 = '" + sent2 + "') )";
+                   
                     Statement sta = connection.createStatement();
                     int x = sta.executeUpdate(query);
                     if (x == 0) {
@@ -155,31 +180,32 @@ public class expandhistory extends JFrame {
                     }
                 
             }
-        });
- 
+         }); 
 
-        sendenButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
-        sendenButton.setBounds(320, 600, 150, 30);
-        contentPane.add(sendenButton);
+            sendenButton.setFont(new Font("Tahoma", Font.PLAIN, 22));
+            sendenButton.setBounds(320, 600, 150, 30);
+            contentPane.add(sendenButton);
 
-        //reg-Button
-        abmeldenButton = new JButton("abmelden");
-        abmeldenButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            
+            //reg-Button
+            abmeldenButton = new JButton("abmelden");
+            abmeldenButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                
 
-                try {
-                    login frame = new login();
-                    frame.setVisible(true);
-                  
-                } catch (Exception exception) {
-                    exception.printStackTrace();
+                    try {
+                        login frame = new login();
+                        frame.setVisible(true);
+                        dispose();
+                    
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
                 }
-            }
-        });
-        abmeldenButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        abmeldenButton.setBounds(600, 10, 150, 30);
-        contentPane.add(abmeldenButton);
+            });
+            abmeldenButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+            abmeldenButton.setBounds(600, 10, 150, 30);
+            contentPane.add(abmeldenButton);
+        
 
     }
 }
