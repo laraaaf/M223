@@ -56,7 +56,7 @@ public class expandhistory extends JFrame {
     public expandhistory(String ID) {
      
         final String SentenceInput_Pattern = 
-        "([A-Za-z0-9\\?!,.-]+)";
+        "([A-Za-z0-9\\?! ,.-]+)";
        
 
          String id = ID;
@@ -135,7 +135,10 @@ public class expandhistory extends JFrame {
             Timer timer = new Timer(2*60*1000, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent arg0) {
+                    login frame = new login();
+                    frame.setVisible(true);
                     dispose();
+                    
                 }
               });
     
@@ -158,7 +161,7 @@ public class expandhistory extends JFrame {
             sendenButton.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
 
-                if (!s2.getText().matches(SentenceInput_Pattern) || !s1.getText().matches(SentenceInput_Pattern) || s2.getText().length() > 15 || s1.getText().length() > 15 ){
+                if (!s2.getText().matches(SentenceInput_Pattern) || !s1.getText().matches(SentenceInput_Pattern) || s2.getText().length() > 25 || s1.getText().length() > 25 ){
                     JOptionPane.showMessageDialog(sendenButton, "Eingabe invalide");
                 }else{
                     

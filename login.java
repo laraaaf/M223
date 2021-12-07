@@ -128,10 +128,11 @@ public class login extends JFrame {
                     } else {
                         String id = x.getString(x.findColumn("ID_User"));
                         //check if last expand was 2 hours ago
-                         query = "SELECT timestamp FROM tbl_userstory WHERE FK_User = '" + id + "' ORDER BY ID_StoryLine DESC";
+                        query = "SELECT timestamp FROM tbl_userstory WHERE FK_User = '" + id + "' ORDER BY ID_StoryLine DESC";
                         sta = connection.createStatement();
                         ResultSet l = sta.executeQuery(query);
-                        l.next();
+                        if (l.next() == true){
+                        
                         
                         LocalDateTime startTime = LocalDateTime.parse(l.getString(l.findColumn("timestamp")),DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                         
@@ -146,11 +147,19 @@ public class login extends JFrame {
                             expandhistory frame = new expandhistory(id);
                             frame.setVisible(true);
                             dispose();
+
                         }else{
-                            time frame = new time(difference);
+
+                            long wait = 2 - difference;
+                            time frame = new time(wait);
                             frame.setVisible(true);
                             dispose();
                         }
+                    }else{
+
+                        expandhistory frame = new expandhistory(id);
+                        frame.setVisible(true);
+                        dispose();}
                             
                     }
                     connection.close();
@@ -172,6 +181,7 @@ public class login extends JFrame {
                 try {
                     register frame = new register();
                     frame.setVisible(true);
+                    dispose();
                   
                 } catch (Exception exception) {
                     exception.printStackTrace();

@@ -121,7 +121,7 @@ public class register extends JFrame {
                     ResultSet res = sta.executeQuery(query);
 
     
-                    if (!emailId.matches(EMAIL_PATTERN) || res.next() == true || password.matches(passwort_pattern) || password.length() >= 8 ) {
+                    if (!emailId.matches(EMAIL_PATTERN) || res.next() == true || !password.matches(passwort_pattern) || password.length() < 8 ) {
                         JOptionPane.showMessageDialog(registrierButton, "E-Mail Adresse wird entweder bereits gebraucht oder Eingaben entsprechen nicht den vorgaben");
                     }else{
 
@@ -174,6 +174,7 @@ public class register extends JFrame {
                 try {
                     login frame = new login();
                     frame.setVisible(true);
+                    dispose();
                   
                 } catch (Exception exception) {
                     exception.printStackTrace();
