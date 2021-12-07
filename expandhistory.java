@@ -55,7 +55,9 @@ public class expandhistory extends JFrame {
     
     public expandhistory(String ID) {
      
-         
+        final String SentenceInput_Pattern = 
+        "([A-Za-z0-9\\?!,.-]+)";
+       
 
          String id = ID;
          try {
@@ -102,7 +104,8 @@ public class expandhistory extends JFrame {
             s1label.setBounds(242, 243, 160, 50);
             contentPane.add(s1label);
 
-            s1 = new JTextField();
+           
+            s1 = new JTextField(2);
             s1.setFont(new Font("Tahoma", Font.PLAIN, 32));
             s1.setBounds(414, 235, 228, 50);
             s1.setColumns(10);
@@ -121,6 +124,7 @@ public class expandhistory extends JFrame {
             s2.setColumns(10);
             contentPane.add(s2);
 
+            
            
             //counter
             JLabel counter = new JLabel("Du hast nur 2 min!!");
@@ -154,15 +158,20 @@ public class expandhistory extends JFrame {
             sendenButton.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
 
+                if (!s2.getText().matches(SentenceInput_Pattern) || !s1.getText().matches(SentenceInput_Pattern) || s2.getText().length() > 15 || s1.getText().length() > 15 ){
+                    JOptionPane.showMessageDialog(sendenButton, "Eingabe invalide");
+                }else{
+                    
+                
 
 
-                try {
+                 try {
                     Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/foldingpaperstory?allowMultiQueries=true", "root", "");
                 
                     String sent1 = s1.getText();
                     String sent2 = s2.getText();
                     
-                    //Todo: abspeichern der Sätze  INSERT INTO tbl_story (sentence1,sentence2) values('" + sent1 + "','" + sent2 +  "');            
+                    //abspeichern der Sätze         
                     String query = "INSERT INTO tbl_story (sentence1,sentence2) values('" + sent1 + "','" + sent2 +  "');INSERT INTO `tbl_userstory` (`ID_StoryLine`, `timestamp`, `FK_User`, `FK_StoryLine`) VALUES (NULL, NOW(),'" + id + "', (SELECT ID_StoryLine FROM `tbl_story` WHERE sentence1 = '" + sent1 + "' AND sentence2 = '" + sent2 + "') )";
                    
                     Statement sta = connection.createStatement();
@@ -178,7 +187,7 @@ public class expandhistory extends JFrame {
                 } catch (Exception exception) {
                     exception.printStackTrace();
                     }
-                
+                }
             }
          }); 
 

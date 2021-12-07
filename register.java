@@ -111,6 +111,9 @@ public class register extends JFrame {
                     "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
+                    final String passwort_pattern = 
+                    "([A-Za-z0-9\\?!,.-]+)";
+
                     //check if Mail is already used
                     String query = "SELECT Mail FROM tbl_user WHERE Mail = '" + email.getText() + "'  ";
 
@@ -118,8 +121,8 @@ public class register extends JFrame {
                     ResultSet res = sta.executeQuery(query);
 
     
-                    if (!emailId.matches(EMAIL_PATTERN) || res.next() == true) {
-                        JOptionPane.showMessageDialog(registrierButton, "E-Mail Adresse wird entweder bereits gebraucht oder entspricht nicht den vorgaben");
+                    if (!emailId.matches(EMAIL_PATTERN) || res.next() == true || password.matches(passwort_pattern) || password.length() >= 8 ) {
+                        JOptionPane.showMessageDialog(registrierButton, "E-Mail Adresse wird entweder bereits gebraucht oder Eingaben entsprechen nicht den vorgaben");
                     }else{
 
                    
