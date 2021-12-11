@@ -1,6 +1,5 @@
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -13,18 +12,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import java.io.FileWriter;   
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-/**
- * User Registration using Swing
- * @author javaguides.net
- *
- */
+
 public class downloadhistory extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
@@ -41,7 +35,7 @@ public class downloadhistory extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    downloadhistory frame = new downloadhistory();
+                    downloadhistory frame = new downloadhistory("0");
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -54,7 +48,8 @@ public class downloadhistory extends JFrame {
      * Create the frame.
      */
 
-    public downloadhistory() {
+    public downloadhistory(String ID) {
+        String id = ID;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(250, 190, 800, 700);
         setResizable(false);
@@ -80,9 +75,19 @@ public class downloadhistory extends JFrame {
                 try {
                     Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/foldingpaperstory", "root", "");
 
-                    String query = "SELECT sentence1, sentence2 FROM tbl_story";
-
+                    //check what rolle
+                    String query = "SELECT Rolle FROM tbl_user WHERE ID_User = '" + id + "' ";
                     Statement sta = connection.createStatement();
+                    ResultSet r = sta.executeQuery(query);
+                    r.next();
+                    String rolle = r.getString("Rolle");
+                    System.out.println(rolle);
+
+                    if (rolle.matches("0")){
+                    query = "SELECT sentence1, sentence2 FROM tbl_story";}
+                    else{ query = "SELECT `tbl_story`.`sentence1`, `tbl_story`.`sentence2`, `tbl_user`.`Mail` FROM `tbl_story` LEFT JOIN `tbl_userstory` ON `tbl_userstory`.`FK_StoryLine` = `tbl_story`.`ID_StoryLine` LEFT JOIN `tbl_user` ON `tbl_userstory`.`FK_User` = `tbl_user`.`ID_User`"; }
+
+                    sta = connection.createStatement();
                     ResultSet x = sta.executeQuery(query);
 
                     if (x.next() == false) {
@@ -94,16 +99,31 @@ public class downloadhistory extends JFrame {
                             String home = System.getProperty("user.home");
                             FileWriter myWriter = new FileWriter(home + "/Downloads/Geschichte.txt", Charset.forName("UTF8"));
                                                     
-                                                           
-                            myWriter.write(x.getString("sentence1") + " ");
-                            myWriter.write(x.getString("sentence2") + "\n");
+                            if (rolle.matches("0")){
+                                myWriter.write(x.getString("sentence1") + " ");
+                                myWriter.write(x.getString("sentence2") + "\n");
+    
+                                while (x.next()){
+                                                               
+                                        myWriter.write(x.getString("sentence1") + " ");
+                                        myWriter.write(x.getString("sentence2") + "\n");
+                                    
+                                }
+                            }else{ 
+                                myWriter.write(x.getString("sentence1") + " ");
+                                myWriter.write(x.getString("sentence1") + " ");
+                                myWriter.write(x.getString("Mail") + "\n");
 
-                            while (x.next()){
+                                while (x.next()){
                                                            
                                     myWriter.write(x.getString("sentence1") + " ");
-                                    myWriter.write(x.getString("sentence2") + "\n");
+                                    myWriter.write(x.getString("sentence1") + " ");
+                                    myWriter.write(x.getString("Mail") + "\n");
                                 
-                            }
+                                 }
+                            
+                            }                               
+                           
                             myWriter.close();
                             JOptionPane.showMessageDialog(downloadButton, "Die Geschichte wurde heruntergeladen");
                          

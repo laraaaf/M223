@@ -21,11 +21,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-/**
- * User Registration using Swing
- * @author javaguides.net
- *
- */
+
 public class login extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;

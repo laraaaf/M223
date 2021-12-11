@@ -1,0 +1,31 @@
+Zuerst werden wir zusammen kurz ein Spiel spielen.		8min
+	Mit ihnen eine schreiben
+	was ist Faltpapier Geschichte?
+		
+
+		-ich denke jeder kennt das Spiel falltpapier geschichte. zum beispiel von der Schule und oder in den Ferien.
+		 erklären was es ist bzw wie es geht....
+		- multiuser
+		
+		 leider ist es momtentan schwer wegen corona dies so zu spielen. Man darf sich nicht zu nahe kommen und wie die lage momentan aussieht, werden wir sehr wahrscheindlich auch wieder mehr zu hause verbringen.
+		 Deshalb wollte ich dieses  Spiel digitalisieren, dass man das Spiel auch in Zeiten von Corona ohne bedenken spielen kann.
+		
+
+Zeigen wie dies umgesetzt -> ablauf - Fenster			8min
+- überlegte mir, welche Teile es geben soll und wie die Geschichte am besten wird
+- dehai (familie)  bezug ez
+
+	wireframe
+	Timer
+
+	sprachen, weli, wiso, was ishes
+
+	
+
+
+
+
+was konnte nicht umgesetzt werden
+
+
+

@@ -1,6 +1,5 @@
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -17,11 +16,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-/**
- * User Registration using Swing
- * @author javaguides.net
- *
- */
+
 public class register extends JFrame {
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
@@ -126,7 +121,7 @@ public class register extends JFrame {
                     }else{
 
                    
-                    query = "INSERT INTO tbl_user (Password,Mail) values('" + hashpassword + "','" + emailId +  "')";
+                    query = "INSERT INTO tbl_user (Password,Mail,Rolle) values('" + hashpassword + "','" + emailId +  "', 0)";
 
                     sta = connection.createStatement();
                     int x = sta.executeUpdate(query);
